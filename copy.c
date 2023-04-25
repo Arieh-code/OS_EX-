@@ -7,7 +7,7 @@ bool copy_file(const char *file1, const char *file2, bool verbose, bool force)
     FILE *f1, *f2;
     char c;
 
-    f1 = fopen(file1, "r"); // Open source file in read mode
+    f1 = fopen(file1, "rb"); // Open source file in read mode
 
     if (f1 == NULL) // Check if source file was not found
     {
@@ -58,8 +58,8 @@ int main(int argc, char *argv[])
 
     const char *file1 = argv[1]; // Get source file name from command line argument
     const char *file2 = argv[2]; // Get target file name from command line argument
-    bool verbose = false; // Initialize verbose flag as false
-    bool force = false; // Initialize force flag as false
+    bool verbose = false;        // Initialize verbose flag as false
+    bool force = false;          // Initialize force flag as false
 
     for (int i = 3; i < argc; i++) // Loop through remaining command line arguments
     {
