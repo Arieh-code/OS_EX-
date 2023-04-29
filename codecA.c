@@ -1,8 +1,11 @@
 #include <ctype.h>
 #include <stddef.h>
+#include "codecA.h"
 
-void codecA_encode(char *str) {
-    for (size_t i = 0; str[i]; ++i) {
+void codecA_encode(char *str)
+{
+    for (size_t i = 0; str[i]; ++i)
+    {
         if (islower(str[i]))
             str[i] = toupper(str[i]);
         else if (isupper(str[i]))
@@ -10,8 +13,10 @@ void codecA_encode(char *str) {
     }
 }
 
-void codecA_decode(char *str) {
-    for (size_t i = 0; str[i]; ++i) {
+void codecA_decode(char *str)
+{
+    for (size_t i = 0; str[i]; ++i)
+    {
         if (islower(str[i]))
             str[i] = toupper(str[i]);
         else if (isupper(str[i]))

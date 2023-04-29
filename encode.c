@@ -1,7 +1,11 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <dlfcn.h>
+#include "codecA.h"
+#include "codecB.h"
 
-typedef void (*EncodeFunc)(char *); // Define a function pointer type for the encode function
+typedef void (*EncodeFunc)(char *);
 
 int main(int argc, char *argv[])
 {
@@ -11,25 +15,33 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    char *codecName = argv[1]; // Get the codec library name from command line argument
-    char *message = argv[2];   // Get the message to encode from command line argument
+    char *codecName = argv[1];
+    char *message = argv[2];
 
-    void *handle = dlopen(codecName, RTLD_LAZY); // Load the codec library dynamically
+    // Load the shared library dynamically
+    char libName[100];
+    sprintf(libName, "lib%s.so", codecName);
+    void *handle = dlopen(libName, RTLD_LAZY);
     if (!handle)
     {
-        printf("Failed to load codec library: %s\n", dlerror()); // Print error message if library loading fails
+        printf("Failed to load codec library: %s\n", dlerror());
         return 1;
     }
 
-    EncodeFunc encode = (EncodeFunc)dlsym(handle, "codecA_encode"); // Get the address of the "codecA_encode" function from the loaded library
+    // Get the address of the encode function from the shared library
+    char funcName[100];
+    sprintf(funcName, "codec%s_encode", strrchr(codecName, 'A') ? "A" : "B");
+    EncodeFunc encode = (EncodeFunc)dlsym(handle, funcName);
     if (!encode)
     {
-        printf("Failed to find encode function: %s\n", dlerror()); // Print error message if "codecA_encode" function is not found
+        printf("Failed to find encode function: %s\n", dlerror());
+        dlclose(handle);
         return 1;
     }
 
-    encode(message);                          // Call the encode function with the message to encode
-    printf("Encoded message: %s\n", message); // Print the encoded message
+    // Call the encode function and print the encoded message
+    encode(message);
+    printf("Encoded message: %s\n", message);
 
     dlclose(handle); // Close the loaded library
     return 0;
