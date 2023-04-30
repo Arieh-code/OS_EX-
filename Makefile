@@ -2,6 +2,8 @@ CC = gcc
 CFLAGS = -Wall -Werror -fPIC
 LDFLAGS = -shared
 
+default: all
+
 all: cmp copy codecA codecB encode decode shell
 
 cmp: cmp.c
